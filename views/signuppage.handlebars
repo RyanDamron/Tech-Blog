@@ -7,13 +7,9 @@
     <div class="row valign-wrapper">
       <form class="col s12 form signup-form">
         <div class="row valign-wrapper">
-          <div class="input-field col s6">
-            <input id="first_name" type="text" class="validate" />
-            <label for="first_name" class="text-color">First Name</label>
-          </div>
-          <div class="input-field col s6">
-            <input id="last_name" type="text" class="validate" />
-            <label for="last_name" class="text-color">Last Name</label>
+          <div class="input-field col s12">
+            <input id="user-name" type="text" class="validate" />
+            <label for="username" class="text-color">Username</label>
           </div>
         </div>
         <div class="row valign-wrapper">
@@ -24,21 +20,13 @@
         </div>
         <div class="row valign-wrapper">
           <div class="input-field col s12">
-            <input id="user-name" type="text" class="validate" />
-            <label for="username" class="text-color">Username</label>
-          </div>
-        </div>
-        <div class="row valign-wrapper">
-          <div class="input-field col s12">
             <input id="password" type="password" class="validate" />
             <label for="password" class="text-color">Password</label>
           </div>
         </div>
-        <div class="row valign-wrapper">
-          <button class="btn waves-effect waves-light" type="submit">Sign Up
-            <i class="material-icons right login-icon">tonality</i>
-          </button>
-        </div>
+        <div class="form-group">
+        <button class="btn btn-primary material-icons right login-icon" id="submit-btn" type="submit">signup</button>
+      </div>
         <div>
           <a href="/login" class="row valign-wrapper text-color link">Login to
             your account</a>

@@ -3,27 +3,17 @@ const { Post, User } = require('../models');
 const withAuth = require('../utils/auth');
 
 router.get('/', async (req, res) => {
+  console.log('Home Page');
   try {
     // Get all posts and JOIN with user data
     const postData = await Post.findAll({
       include: [
         {
           model: User,
-          attributes: ['name'],
+          attributes: ['username'],
         },
       ],
     });
-
-    router.get("/signup", async (req, res) => {
-      if (req.session.logged_in) {
-        res.redirect("/homepage");
-        return;
-      }
-      // Pass serialized data and session flag into template
-      res.render("signuppage");
-      return;
-    });
-
     // Serialize data so the template can read it
     const posts = postData.map((post) => post.get({ plain: true }));
 
@@ -37,21 +27,33 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.get("/signup", async (req, res) => {
+  if (req.session.logged_in) {
+    console.log('redirect');
+    res.redirect("/");
+    return;
+  }
+  // Pass serialized data and session flag into template
+  res.render("signuppage");
+  return;
+});
+
 router.get('/posts/:id', async (req, res) => {
   try {
-    const postData = await post.findByPk(req.params.id, {
+    const postData = await Post.findByPk(req.params.id, {
       include: [
         {
           model: User,
-          attributes: ['name'],
+          attributes: ['username'],
         },
       ],
     });
 
-    const project = postData.get({ plain: true });
+    const post = postData.get({ plain: true });
+    console.log(post)
 
-    res.render('posts', {
-      ...post,
+    res.render('singlepost', {
+      post,
       logged_in: req.session.logged_in
     });
   } catch (err) {
@@ -59,30 +61,30 @@ router.get('/posts/:id', async (req, res) => {
   }
 });
 
-// Use withAuth middleware to prevent access to route
-router.get('/blog', withAuth, async (req, res) => {
-  try {
-    // Find the logged in user based on the session ID
-    const userData = await User.findByPk(req.session.user_id, {
-      attributes: { exclude: ['password'] },
-      include: [{ model: Post }],
-    });
-
-    const user = userData.get({ plain: true });
-
-    res.render('blog', {
-      ...user,
-      logged_in: true
-    });
+router.get('/edit/:id', withAuth, async (req, res) => {
+  try{
+    const postData = await Post.findByPk(req.params.id)
+    if (postData) {
+      const post = postData.get({plain: true})
+      res.render('editpost', 
+        {layout: 'dashboard', post}
+    ) }else {
+        res.status(404).json(err);
+    
+    } 
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
+    // It might be helpful to create a dashboardRoutes.js
+// Use withAuth middleware to prevent access to route
+
+
 router.get('/login', (req, res) => {
   // If the user is already logged in, redirect the request to another route
   if (req.session.logged_in) {
-    res.redirect('/blog');
+    res.redirect('/dashboard');
     return;
   }
 
